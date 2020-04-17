@@ -14,7 +14,6 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"time"
 )
 
 // The Priority is a combination of the syslog facility and
@@ -285,16 +284,18 @@ func (n *netConn) writeString(p Priority, hostname, tag, msg, nl string) error {
 		// Compared to the network form below, the changes are:
 		//	1. Use time.Stamp instead of time.RFC3339.
 		//	2. Drop the hostname field from the Fprintf.
-		timestamp := time.Now().Format(time.Stamp)
-		_, err := fmt.Fprintf(n.conn, "<%d>%s %s[%d]: %s%s",
-			p, timestamp,
-			tag, os.Getpid(), msg, nl)
-		return err
+		//	timestamp := time.Now().Format(time.Stamp)
+		//	_, err := fmt.Fprintf(n.conn, "<%d>%s %s[%d]: %s%s",
+		//		p, timestamp,
+		//		tag, os.Getpid(), msg, nl)
+		//	return err
+		//}
+		//timestamp := time.Now().Format(time.RFC3339)
+		//_, err := fmt.Fprintf(n.conn, "<%d>%s %s %s[%d]: %s%s",
+		//	p, timestamp, hostname,
+		//	tag, os.Getpid(), msg, nl)
 	}
-	timestamp := time.Now().Format(time.RFC3339)
-	_, err := fmt.Fprintf(n.conn, "<%d>%s %s %s[%d]: %s%s",
-		p, timestamp, hostname,
-		tag, os.Getpid(), msg, nl)
+	_, err := fmt.Fprintf(n.conn, "%s", msg)
 	return err
 }
 
